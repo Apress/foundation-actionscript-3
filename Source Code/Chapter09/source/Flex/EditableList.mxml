@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="230" height="200">
+    <mx:Script>
+		<![CDATA[
+        private function onAddName(event:Event):void {
+            var newItem:Object = {label: addName_if.text};
+            names_li.dataProvider.addItem(newItem);
+            addName_if.text = "";
+        }
+
+        private function onDeleteName(event:Event):void {
+            names_li.dataProvider.removeItemAt(names_li.selectedIndex);
+            editName_if.text = "";
+        }
+
+        private function onEditName(event:Event):void {
+            var newItem:Object = {label: editName_if.text};
+            names_li.dataProvider.setItemAt(newItem, names_li.selectedIndex);
+        }
+
+        private function onSelectName(event:Event):void {
+            editName_if.text = names_li.selectedItem.label;
+        }
+        ]]>
+	</mx:Script>
+    <mx:VBox width="100%" height="100%" paddingLeft="15" paddingRight="15" paddingTop="15">
+        <mx:List width="100%" height="100" id="names_li" change="onSelectName(event)">
+            <mx:dataProvider>
+                <mx:ArrayCollection/>
+            </mx:dataProvider>
+        </mx:List>
+        <mx:HBox width="100%">
+            <mx:TextInput width="100%" height="22" id="editName_if" enabled="{names_li.selectedIndex>-1}"
+                          change="onEditName(event)"/>
+            <mx:Button label="-" width="22" height="22" id="deleteName_bn" enabled="{names_li.selectedIndex>-1}"
+                       click="onDeleteName(event)"/>
+        </mx:HBox>
+        <mx:VBox verticalGap="0" width="100%">
+            <mx:Label text="Enter a name to add to the list:" height="20"/>
+            <mx:HBox width="100%">
+                <mx:TextInput width="100%" height="22" id="addName_if"/>
+                <mx:Button label="+" width="22" height="22" id="addName_bn" enabled="{addName_if.text.length>0}"
+                           click="onAddName(event)"/>
+            </mx:HBox>
+        </mx:VBox>
+    </mx:VBox>
+</mx:Application>

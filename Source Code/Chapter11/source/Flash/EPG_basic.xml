@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<EPG>
+	<Channel id="BBC1">
+			<Program id="6 oclock News" starttime="6:00">The breaking headlines</Program>
+			<Program id="Good Morning Britain" starttime="6:15">Stories from around the UK</Program>
+			<Program id="EastEnders" starttime="8:00" >Catch up with Albert Square</Program>
+	</Channel>
+	<Channel id="ITV">
+			<Program id="Healthy Eating" starttime="6:00">Meals even our kids will eat</Program>
+			<Program id="News" starttime="6:35">News round up of the morning's events</Program>
+			<Program id="Cartoons" starttime="6:50" >Keep the kids occupied</Program>
+			<Program id="Breakfast" starttime="7:00">Topical conversation, News</Program>
+	</Channel>
+	<Channel id="Channel 4">
+			<Program id="Scooby Doo" starttime="6:00">Watch the kids solve mysteries</Program>
+			<Program id="Big Brother" starttime="6:30">Catch up with the housemates</Program>
+			<Program id="Big Breakfast" starttime="7:15" >Everything you need in the morning</Program>
+	</Channel>
+</EPG>

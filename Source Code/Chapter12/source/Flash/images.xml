@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<images>
+  <image>
+    <name>Audrey holding her baby doll.</name>
+    <file>images/baby.jpg</file>
+    <thumb>images/thumbs/baby.jpg</thumb>
+  </image>
+  <image>
+    <name>The first trip to the beach.</name>
+    <file>images/beach.jpg</file>
+    <thumb>images/thumbs/beach.jpg</thumb>
+  </image>
+  <image>
+    <name>Building (and destroying) a fort.</name>
+    <file>images/fort.jpg</file>
+    <thumb>images/thumbs/fort.jpg</thumb>
+  </image>
+  <image>
+    <name>Prodigy?</name>
+    <file>images/piano.jpg</file>
+    <thumb>images/thumbs/piano.jpg</thumb>
+  </image>
+  <image>
+    <name>A personal pool party.</name>
+    <file>images/pool.jpg</file>
+    <thumb>images/thumbs/pool.jpg</thumb>
+  </image>
+  <image>
+    <name>So seemingly innocent...</name>
+    <file>images/sleeping.jpg</file>
+    <thumb>images/thumbs/sleeping.jpg</thumb>
+  </image>
+</images>

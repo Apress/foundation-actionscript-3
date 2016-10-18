@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+                layout="vertical" creationComplete="feed.send()">
+    <!-- The HTTPService item is used to load the RSS data from the specified URL -->
+    <mx:HTTPService id="feed" url="http://blogs.adobe.com/labs/feed"/>
+    <mx:VDividedBox width="100%" height="100%">
+        <!-- DataGrid control populated with entries from the feed using data binding -->
+        <mx:DataGrid id="entries" dataProvider="{feed.lastResult.rss.channel.item}" width="100%" height="66%">
+            <mx:columns>
+                <mx:DataGridColumn dataField="pubDate" headerText="Date"/>
+                <mx:DataGridColumn dataField="title" headerText="Title"/>
+            </mx:columns>
+        </mx:DataGrid>
+        <!-- TextArea control bound to the description property of the selected item from the entries DataGrid -->
+        <mx:TextArea htmlText="{entries.selectedItem.description}" width="100%" height="34%"/>
+    </mx:VDividedBox>
+</mx:Application>

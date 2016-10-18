@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="onCreationComplete(event)"
+                layout="vertical">
+
+    <mx:Script>
+    <![CDATA[
+        import com.foundationAS3.ch14.irisreader.events.SubscribeDialogEvent;
+        import com.foundationAS3.ch14.irisreader.Subscription;
+
+        import mx.collections.ArrayCollection;
+        import mx.events.FlexEvent;
+        import mx.managers.PopUpManager;
+
+        import flash.net.SharedObject;
+        import flash.utils.Timer;
+        import flash.events.TimerEvent;
+
+        import mx.formatters.DateFormatter;
+
+        import com.adobe.xml.syndication.generic.IItem;
+
+        [Bindable]
+        private var _subscriptions:ArrayCollection;
+        private var _refreshTimer:Timer;
+        private var _dateFormatter:DateFormatter;
+
+        private function onCreationComplete(event:FlexEvent):void {
+            _subscriptions = new ArrayCollection();
+            _subscriptions.addItem(new Subscription("http://blogs.adobe.com/labs/feed"));
+            _subscriptions.addItem(new Subscription("http://news.yahoo.com/rss/topstories"));
+            loadData();
+
+            _dateFormatter = new DateFormatter();
+            _dateFormatter.formatString = "DD MMM YYYY HH:NN";
+
+            _refreshTimer = new Timer(5 * 60 * 1000);
+            _refreshTimer.addEventListener(TimerEvent.TIMER, onRefreshTimer);
+            _refreshTimer.start();
+        }
+
+        private function formatDate(date:String):String {
+            return _dateFormatter.format(date);
+        }
+
+        private function renderArticlesGridDate(item:IItem, column:DataGridColumn):String {
+            return _dateFormatter.format(item.date);
+        }
+
+        private function renderSubscriptionsListLabel(subscription:Subscription):String {
+            var title:String = subscription.title;
+            if (title == null) {
+                title = subscription.feedURL;
+            }
+            title += " (" + subscription.articles.length + ")";
+            return title;
+        }
+
+        private function subscribe(event:MouseEvent):void {
+            var dialog:SubscribeDialog = PopUpManager.createPopUp(this, SubscribeDialog, true) as SubscribeDialog;
+            PopUpManager.centerPopUp(dialog);
+            dialog.addEventListener(SubscribeDialogEvent.SUBSCRIBE, onSubscribeDialogSubscribe);
+        }
+
+        private function unsubscribe(event:MouseEvent):void {
+            _subscriptions.removeItemAt(subscriptionsList.selectedIndex);
+            saveData();
+        }
+
+        private function refreshAll(event:Event):void {
+            for each (var subscription:Subscription in _subscriptions) {
+                subscription.refresh();
+            }
+        }
+
+        private function refreshSelected(event:Event):void {
+            (subscriptionsList.selectedItem as Subscription).refresh();
+        }
+
+        private function onRefreshTimer(event:TimerEvent):void {
+            refreshAll(event);
+        }
+
+        private function onSubscribeDialogSubscribe(event:SubscribeDialogEvent):void {
+            _subscriptions.addItem(new Subscription(event.feedURL));
+            saveData();
+        }
+
+        private function saveData():void {
+            var so:SharedObject = SharedObject.getLocal("IrisReader");
+            var feedURLs:Array = new Array();
+            for each (var subscription:Subscription in _subscriptions) {
+                feedURLs.push(subscription.feedURL);
+            }
+            so.data.feedURLs = feedURLs;
+            so.flush();
+        }
+
+        private function loadData():void {
+            _subscriptions.removeAll();
+            var so:SharedObject = SharedObject.getLocal("IrisReader");
+            if (so.data.feedURLs) {
+                for each (var feedURL:String in so.data.feedURLs) {
+                    _subscriptions.addItem(new Subscription(feedURL));
+                }
+            }
+        }
+
+        private function visitSelectedSite(event:Event):void {
+            var subscription:Subscription = (subscriptionsList.selectedItem as Subscription);
+            navigateToURL(new URLRequest(subscription.url));
+        }
+
+        private function readSelectedArticle(event:Event):void {
+            var item:IItem = (articlesGrid.selectedItem as IItem);
+            navigateToURL(new URLRequest(item.link));
+        }
+    ]]>
+    </mx:Script>
+
+
+    <mx:HDividedBox width="100%" height="100%">
+        <mx:Panel title="Subscriptions" width="40%" height="100%">
+            <mx:List id="subscriptionsList" dataProvider="{_subscriptions}"
+                     labelField="title" labelFunction="renderSubscriptionsListLabel" width="100%" height="100%"/>
+            <mx:ControlBar>
+                <mx:Label text="Refresh: "/>
+                <mx:Button label="Selected" click="refreshSelected(event)"
+                           enabled="{subscriptionsList.selectedItem !== null}"/>
+                <mx:Button label="All" click="refreshAll(event)"/>
+                <mx:Spacer width="100%"/>
+                <mx:Button id="subscribeButton" label="+" click="subscribe(event)"/>
+                <mx:Button id="unsubscribeButton" label="-" click="unsubscribe(event)"
+                           enabled="{subscriptionsList.selectedItem !== null}"/>
+            </mx:ControlBar>
+        </mx:Panel>
+        <mx:VDividedBox width="60%" height="100%">
+            <mx:Panel title="{subscriptionsList.selectedItem.title}" width="100%" height="50%">
+                <mx:DataGrid id="articlesGrid" width="100%" height="100%"
+                             dataProvider="{subscriptionsList.selectedItem.articles}">
+                    <mx:columns>
+                        <mx:DataGridColumn dataField="date" headerText="Date"
+                                           labelFunction="renderArticlesGridDate" width="150"/>
+                        <mx:DataGridColumn dataField="title" headerText="Title"/>
+                    </mx:columns>
+                </mx:DataGrid>
+                <mx:ControlBar>
+                    <mx:Label text="Last checked:"/>
+                    <mx:Text text="{formatDate(subscriptionsList.selectedItem.lastChecked)}"/>
+                    <mx:Spacer width="100%"/>
+                    <mx:Button label="Visit site"
+                               click="visitSelectedSite(event)"
+                               enabled="{subscriptionsList.selectedItem !== null}"/>
+                </mx:ControlBar>
+            </mx:Panel>
+            <mx:Panel title="{articlesGrid.selectedItem.title}" width="100%" height="50%">
+                <mx:TextArea id="excerptTextArea" editable="false"
+                             width="100%" height="100%"
+                             htmlText="{articlesGrid.selectedItem.excerpt.value}"/>
+                <mx:ControlBar>
+                    <mx:Label text="Posted:"/>
+                    <mx:Text text="{formatDate(articlesGrid.selectedItem.date)}"/>
+                    <mx:Spacer width="100%"/>
+                    <mx:Button label="Read more"
+                               click="readSelectedArticle(event)"
+                               enabled="{articlesGrid.selectedItem !== null}"/>
+                </mx:ControlBar>
+            </mx:Panel>
+        </mx:VDividedBox>
+    </mx:HDividedBox>
+</mx:Application>

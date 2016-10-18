@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" creationComplete="feed.send()">
+    <mx:HTTPService id="feed" url="http://blogs.adobe.com/labs/feed"/>
+    <mx:VDividedBox width="100%" height="100%">
+        <mx:DataGrid id="entries" width="100%" height="66%" dataProvider="{feed.lastResult.rss.channel.item}">
+            <mx:columns>
+                <mx:DataGridColumn headerText="Date" dataField="pubDate"/>
+                <mx:DataGridColumn headerText="Title" dataField="title"/>
+            </mx:columns>
+        </mx:DataGrid>
+        <mx:TextArea width="100%" height="34%" htmlText="{entries.selectedItem.description}"/>
+    </mx:VDividedBox>
+</mx:Application>

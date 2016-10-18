@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EPG>
+	<Channel id="BBC1">
+		<Program id="6am News" starttime="6:00" duration="15" rating="none">The breaking headlines as they come in</Program>
+		<Program id="Good Morning Britain" starttime="6:15" duration="105" rating="none">Stories from around Britain with News updates, Sports and Weather</Program>
+		<Program id="EastEnders" starttime="8:00" duration="60" rating="none">A chance to catch up with what's been going on in Albert Square</Program>
+	</Channel>
+	<Channel id="ITV">
+		<Program id="Healthy Eating" starttime="6:00" duration="35" rating="none">Alan Danes shows us how to cook meals even our kids will eat</Program>
+		<Program id="News" starttime="6:35" duration="15" rating="none">News round up of the morning's events</Program>
+		<Program id="Cartoons" starttime="6:50" duration="10" rating="none">Keep them occupied whilst the eat their breakfast</Program>
+		<Program id="Breakfast" starttime="7:00" duration="120" rating="none">Topical conversation, News, Weather, Sports, Fashion and Gossip</Program>
+	</Channel>
+	<Channel id="Channel 4">
+		<Program id="Scooby Doo" starttime="6:00" duration="30" rating="none">Watch the pesky kids solve another mystery</Program>
+		<Program id="Big Brother" starttime="6:30" duration="45" rating="PG">Catch up with the remaining housemates as they shag the morning away</Program>
+		<Program id="Big Breakfast" starttime="7:15" duration="105" rating="none">Yes it's back. Bigger and more topical. everything you need in the morning</Program>
+	</Channel>
+</EPG>
